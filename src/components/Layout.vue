@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header @update:searchTerm="updateSearchTerm" />
+    <Header @update:searchTerm="updateSearchTerm" @update:filterItem="updateFilterItem" />
 
     <div v-if="loading">Loading...</div>
     <div v-if="error">{{ error }}</div>
@@ -10,11 +10,6 @@
         <option value="default">Default</option>
         <option value="low">Price: Low to High</option>
         <option value="high">Price: High to Low</option>
-      </select>
-
-      <select v-model="filterItem" class="p-2 border border-gray-300 rounded">
-        <option value="All categories">All categories</option>
-        <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
       </select>
     </div>
 
@@ -102,6 +97,10 @@ const resetFiltersAndSorting = () => {
 
 const updateSearchTerm = (newSearchTerm) => {
   searchTerm.value = newSearchTerm;
+};
+
+const updateFilterItem = (newFilterItem) => {
+  filterItem.value = newFilterItem;
 };
 
 // Reset filters and sorting when navigating to home

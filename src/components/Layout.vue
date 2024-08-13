@@ -97,7 +97,9 @@ router.beforeEach((to, from) => {
           <span v-for="n in Math.floor(product.rating.rate)" :key="n" class="star">&#9733;</span>
           <span v-for="n in (5 - Math.floor(product.rating.rate))" :key="n + 5" class="star-empty">&#9734;</span>
         </div>
-        <button class="add-to-cart">Add to Cart</button>
+        <button @click="addToCart" class="add-to-cart">
+       <i class="fas fa-shopping-cart"></i>
+        </button>
       </router-link>
     </div>
   </div>
@@ -170,19 +172,13 @@ router.beforeEach((to, from) => {
 }
 
 .add-to-cart {
-  display: block;
-  width: 80%;
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
+  background: none;
   border: none;
-  border-radius: 8px;
-  text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s;
+  padding: 0;
 }
-
-.add-to-cart:hover {
-  background-color: #45a049;
+.fa-shopping-cart {
+  font-size: 24px; /* Adjust size as needed */
+  color: rgb(82, 207, 235); /* Adjust color as needed */
 }
 </style>

@@ -1,147 +1,11 @@
-<script setup>
-import { ref, onMounted, computed } from 'vue';
-import { fetchProducts } from '../api';
-import { useRouter, useRoute } from 'vue-router';
-
-/**
- * Represents the list of products fetched from the API.
- * @type {import('vue').Ref<Array<Product>>}
- */
-const products = ref([]);
-
-/**
- * Represents the original list of products, used for filtering and sorting.
- * @type {import('vue').Ref<Array<Product>>}
- */
-const originalProducts = ref([]);
-
-/**
- * Indicates whether the data is still loading.
- * @type {import('vue').Ref<boolean>}
- */
-const loading = ref(true);
-
-/**
- * Holds any error message if the data fetching fails.
- * @type {import('vue').Ref<string | null>}
- */
-const error = ref(null);
-
-/**
- * Represents the current sorting option.
- * @type {import('vue').Ref<'default' | 'low' | 'high'>}
- */
-const sorting = ref('default');
-
-/**
- * Represents the selected category for filtering.
- * @type {import('vue').Ref<string>}
- */
-const filterItem = ref('All categories');
-
-/**
- * Represents the current search term.
- * @type {import('vue').Ref<string>}
- */
-const searchTerm = ref('');
-
-/**
- * List of available categories fetched from the API.
- * @type {import('vue').Ref<string[]>}
- */
-const categories = ref([]);
-
-/**
- * Vue Router instance for navigation.
- * @type {import('vue-router').Router}
- */
-const router = useRouter();
-
-/**
- * Vue Route instance to access route information.
- * @type {import('vue-router').Route}
- */
-const route = useRoute();
-
-/**
- * Fetches products from the API and initializes the component state.
- * @async
- * @function
- * @returns {Promise<void>}
- */
-onMounted(async () => {
-  try {
-    const fetchedProducts = await fetchProducts();
-    products.value = fetchedProducts;
-    originalProducts.value = fetchedProducts;
-    categories.value = [...new Set(fetchedProducts.map(p => p.category))];
-  } catch (err) {
-    error.value = 'Failed to fetch products.';
-  } finally {
-    loading.value = false;
-  }
-});
-
-/**
- * Filters and sorts products based on user input.
- * @type {import('vue').ComputedRef<Array<Product>>}
- */
-const filteredAndSortedProducts = computed(() => {
-  let filteredProducts = [...originalProducts.value];
-
-  // Filter by category
-  if (filterItem.value !== 'All categories') {
-    filteredProducts = filteredProducts.filter(product => product.category === filterItem.value);
-  }
-
-  // Filter by search term
-  if (searchTerm.value) {
-    filteredProducts = filteredProducts.filter(product =>
-      product.title.toLowerCase().includes(searchTerm.value.toLowerCase())
-    );
-  }
-
-  // Sort products
-  if (sorting.value === 'low') {
-    filteredProducts.sort((a, b) => a.price - b.price);
-  } else if (sorting.value === 'high') {
-    filteredProducts.sort((a, b) => b.price - a.price);
-  }
-
-  return filteredProducts;
-});
-
-/**
- * Resets the filters and sorting to their default values.
- * @function
- */
-const resetFiltersAndSorting = () => {
-  filterItem.value = 'All categories';
-  sorting.value = 'default';
-  searchTerm.value = '';
-};
-
-// Reset filters and sorting when navigating to home
-router.beforeEach((to, from) => {
-  if (to.path === '/' && from.path !== '/product/:id') {
-    resetFiltersAndSorting();
-  }
-});
-</script>
-
 <template>
   <div>
+    <Header @update:searchTerm="updateSearchTerm" />
+
     <div v-if="loading">Loading...</div>
     <div v-if="error">{{ error }}</div>
 
     <div class="filters">
-      <input 
-        v-model="searchTerm" 
-        type="text" 
-        placeholder="Search..." 
-        class="p-2 border border-gray-300 rounded"
-      />
-
       <select v-model="sorting" class="p-2 border border-gray-300 rounded">
         <option value="default">Default</option>
         <option value="low">Price: Low to High</option>
@@ -174,6 +38,79 @@ router.beforeEach((to, from) => {
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { fetchProducts } from '../api';
+import { useRouter, useRoute } from 'vue-router';
+import Header from './Header.vue'; // Adjust the path as needed
+
+const products = ref([]);
+const originalProducts = ref([]);
+const loading = ref(true);
+const error = ref(null);
+const sorting = ref('default');
+const filterItem = ref('All categories');
+const searchTerm = ref('');
+const categories = ref([]);
+const router = useRouter();
+const route = useRoute();
+
+onMounted(async () => {
+  try {
+    const fetchedProducts = await fetchProducts();
+    products.value = fetchedProducts;
+    originalProducts.value = fetchedProducts;
+    categories.value = [...new Set(fetchedProducts.map(p => p.category))];
+  } catch (err) {
+    error.value = 'Failed to fetch products.';
+  } finally {
+    loading.value = false;
+  }
+});
+
+const filteredAndSortedProducts = computed(() => {
+  let filteredProducts = [...originalProducts.value];
+
+  // Filter by category
+  if (filterItem.value !== 'All categories') {
+    filteredProducts = filteredProducts.filter(product => product.category === filterItem.value);
+  }
+
+  // Filter by search term
+  if (searchTerm.value) {
+    filteredProducts = filteredProducts.filter(product =>
+      product.title.toLowerCase().includes(searchTerm.value.toLowerCase())
+    );
+  }
+
+  // Sort products
+  if (sorting.value === 'low') {
+    filteredProducts.sort((a, b) => a.price - b.price);
+  } else if (sorting.value === 'high') {
+    filteredProducts.sort((a, b) => b.price - a.price);
+  }
+
+  return filteredProducts;
+});
+
+const resetFiltersAndSorting = () => {
+  filterItem.value = 'All categories';
+  sorting.value = 'default';
+  searchTerm.value = '';
+};
+
+const updateSearchTerm = (newSearchTerm) => {
+  searchTerm.value = newSearchTerm;
+};
+
+// Reset filters and sorting when navigating to home
+router.beforeEach((to, from) => {
+  if (to.path === '/' && from.path !== '/product/:id') {
+    resetFiltersAndSorting();
+  }
+});
+</script>
 
 <style scoped>
 /* Add your existing styles here */

@@ -1,6 +1,50 @@
+<script setup>
+import { ref, onMounted, defineEmits } from 'vue';
+import { fetchCategories } from '../api'; // Adjust the path as needed
+
+const categories = ref([]);
+const selectedCategory = ref('All categories');
+const searchQuery = ref('');
+const isLoggedIn = ref(false);
+
+// Define emitted events
+const emit = defineEmits(['update:filterItem', 'update:searchTerm']);
+
+// Fetch categories on component mount
+onMounted(async () => {
+  try {
+    categories.value = await fetchCategories();
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+  }
+});
+
+const toggleLogin = () => {
+  isLoggedIn.value = !isLoggedIn.value;
+};
+
+const goToCart = () => {
+  // Implement cart navigation
+};
+
+const emitSearchQuery = () => {
+  emit('update:searchTerm', searchQuery.value);
+};
+
+const emitCategoryFilter = () => {
+  emit('update:filterItem', selectedCategory.value);
+};
+</script>
+
 <template>
   <div class="navbar">
-    <div class="logo">ShopQuick</div>
+    <div class="logo">
+      ShopQuick
+    </div>
+    <select v-model="selectedCategory" @change="emitCategoryFilter" class="category-filter">
+      <option value="All categories">All categories</option>
+      <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
+    </select>
     <div class="search-bar">
       <input 
         type="text" 
@@ -12,32 +56,9 @@
     <div class="nav-items">
       <button @click="goToCart">Cart</button>
       <button @click="toggleLogin">{{ isLoggedIn ? 'Logout' : 'Login' }}</button>
-    </div> 
+    </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      isLoggedIn: false,
-      searchQuery: ''
-    };
-  },
-  methods: {
-    toggleLogin() {
-      this.isLoggedIn = !this.isLoggedIn;
-    },
-    goToCart() {
-      // Implement cart navigation
-    },
-    emitSearchQuery() {
-      this.$emit('update:searchTerm', this.searchQuery);
-    }
-  }
-}
-</script>
-
 
 <style scoped>
 .navbar {
@@ -60,7 +81,9 @@ export default {
 
 .search-bar input {
   padding: 10px;
-  width: 300px;
+  width: 400px;
+  border-color: rgb(82, 207, 235);
+  border-radius: 25px ;
 }
 
 .nav-items button {
@@ -70,5 +93,11 @@ export default {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.category-filter {
+  margin-left: 20px;
+  padding: 5px;
+  border-color: rgb(82, 207, 235);
 }
 </style>

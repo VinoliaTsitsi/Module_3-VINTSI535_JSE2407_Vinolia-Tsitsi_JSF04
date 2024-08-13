@@ -1,44 +1,8 @@
-<template>
-  <div>
-    <Header @update:searchTerm="updateSearchTerm" @update:filterItem="updateFilterItem" />
-
-    <div v-if="loading">Loading...</div>
-    <div v-if="error">{{ error }}</div>
-
-    <div class="filters">
-      <select v-model="sorting" class="p-2 border border-gray-300 rounded">
-        <option value="default">Default</option>
-        <option value="low">Price: Low to High</option>
-        <option value="high">Price: High to Low</option>
-      </select>
-    </div>
-
-    <div v-if="filteredAndSortedProducts.length" class="product-grid">
-      <router-link
-        v-for="product in filteredAndSortedProducts"
-        :key="product.id"
-        :to="`/product/${product.id}`"
-        class="product-card"
-      >
-        <img :src="product.image" :alt="product.title" class="product-image" />
-        <h2>{{ product.title }}</h2>
-        <p>Price: R{{ product.price }}</p>
-        <p>Category: {{ product.category }}</p>
-        <div class="rating">
-          <span v-for="n in Math.floor(product.rating.rate)" :key="n" class="star">&#9733;</span>
-          <span v-for="n in (5 - Math.floor(product.rating.rate))" :key="n + 5" class="star-empty">&#9734;</span>
-        </div>
-        <button class="add-to-cart">Add to Cart</button>
-      </router-link>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { fetchProducts } from '../api';
 import { useRouter, useRoute } from 'vue-router';
-import Header from './Header.vue'; // Adjust the path as needed
+import Header from './Header.vue';
 
 const products = ref([]);
 const originalProducts = ref([]);
@@ -110,6 +74,34 @@ router.beforeEach((to, from) => {
   }
 });
 </script>
+
+<template>
+  <div>
+    <Header @update:searchTerm="updateSearchTerm" @update:filterItem="updateFilterItem" />
+
+    <div v-if="loading">Loading...</div>
+    <div v-if="error">{{ error }}</div>
+
+    <div v-if="filteredAndSortedProducts.length" class="product-grid">
+      <router-link
+        v-for="product in filteredAndSortedProducts"
+        :key="product.id"
+        :to="`/product/${product.id}`"
+        class="product-card"
+      >
+        <img :src="product.image" :alt="product.title" class="product-image" />
+        <h2>{{ product.title }}</h2>
+        <p>Price: R{{ product.price }}</p>
+        <p>Category: {{ product.category }}</p>
+        <div class="rating">
+          <span v-for="n in Math.floor(product.rating.rate)" :key="n" class="star">&#9733;</span>
+          <span v-for="n in (5 - Math.floor(product.rating.rate))" :key="n + 5" class="star-empty">&#9734;</span>
+        </div>
+        <button class="add-to-cart">Add to Cart</button>
+      </router-link>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 /* Add your existing styles here */

@@ -83,12 +83,7 @@ router.beforeEach((to, from) => {
     <div v-if="error">{{ error }}</div>
 
     <div v-if="filteredAndSortedProducts.length" class="product-grid">
-      <router-link
-        v-for="product in filteredAndSortedProducts"
-        :key="product.id"
-        :to="`/product/${product.id}`"
-        class="product-card"
-      >
+      <div v-for="product in filteredAndSortedProducts" :key="product.id" class="product-card">
         <img :src="product.image" :alt="product.title" class="product-image" />
         <h2>{{ product.title }}</h2>
         <p>Price: R{{ product.price }}</p>
@@ -97,16 +92,21 @@ router.beforeEach((to, from) => {
           <span v-for="n in Math.floor(product.rating.rate)" :key="n" class="star">&#9733;</span>
           <span v-for="n in (5 - Math.floor(product.rating.rate))" :key="n + 5" class="star-empty">&#9734;</span>
         </div>
-        <button @click="addToCart" class="add-to-cart">
-       <i class="fas fa-shopping-cart"></i>
-        </button>
-      </router-link>
+        <div class="product-actions">
+          <button @click="addToCart(product)" class="action-button">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+          <button @click="viewDetails(product.id)" class="action-button">
+            <i class="fas fa-info-circle"></i> Details
+          </button>
+          <!-- Add more buttons here -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Add your existing styles here */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -120,7 +120,7 @@ router.beforeEach((to, from) => {
   border-radius: 8px;
   background-color: white#a373b155;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  cursor: default; /* Change cursor to default */
   display: block;
   text-align: left;
   width: 90%;
@@ -171,14 +171,33 @@ router.beforeEach((to, from) => {
   margin-right: 2px;
 }
 
-.add-to-cart {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+.product-actions {
+  margin-top: 16px;
 }
-.fa-shopping-cart {
-  font-size: 24px; /* Adjust size as needed */
-  color: rgb(82, 207, 235); /* Adjust color as needed */
+
+.action-button {
+  background: none;
+  border: 1px solid rgb(82, 207, 235);
+  color: rgb(82, 207, 235);
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-right: 8px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.action-button i {
+  margin-right: 4px;
+}
+
+.action-button:hover {
+  background-color: rgb(82, 207, 235);
+  color: white;
+}
+
+.action-button:focus {
+  outline: none;
 }
 </style>

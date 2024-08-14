@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { login } from '../api'; // Import the simulated login function
 
 const username = ref('');
 const password = ref('');
@@ -25,17 +25,14 @@ const handleLogin = async () => {
   error.value = '';
 
   try {
-    const response = await axios.post(
-      'https://fakestoreapi.com/auth/login',
-      { username: username.value, password: password.value },
-      { headers: { 'Content-type': 'application/json' } }
-    );
+    // Simulate login
+    const response = await login(username.value, password.value);
 
     // Store JWT in local storage
-    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('token', response.token);
 
-    // Redirect to the page the user was trying to access
-    router.push({ path: router.currentRoute.value.query.redirect || '/' });
+    // Redirect to the main page
+    router.push('/Layout');
   } catch (err) {
     error.value = 'Failed to login. Please check your credentials.';
   } finally {

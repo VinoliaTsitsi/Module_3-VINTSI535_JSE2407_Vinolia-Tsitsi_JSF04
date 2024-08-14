@@ -1,3 +1,5 @@
+// src/router/index.js or src/router.js
+
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from './components/Login.vue'; // Adjust the path as needed
 import HomePage from './components/Layout.vue'; // Adjust the path as needed
@@ -13,8 +15,8 @@ const routes = [
     component: LoginPage
   },
   {
-    path: '/home',
-    name: 'Home',
+    path: '/Layout',
+    name: 'Layout',
     component: HomePage,
     meta: { requiresAuth: true } // Example meta field for protected routes
   },
@@ -22,7 +24,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL), // Updated to use Vite's environment variable syntax
   routes
 });
 

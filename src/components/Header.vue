@@ -54,7 +54,9 @@ const emitCategoryFilter = () => {
       >
     </div>
     <div class="nav-items">
-      <button @click="goToCart">Cart</button>
+      <button @click="addToCart" class="add-to-cart">
+      <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
+    </button>
       <button @click="toggleLogin">{{ isLoggedIn ? 'Logout' : 'Login' }}</button>
     </div>
   </div>
@@ -94,7 +96,14 @@ const emitCategoryFilter = () => {
   border: none;
   cursor: pointer;
 }
-
+.add-to-cart {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 24px; /* Adjust size as needed */
+  color: #000; /* Adjust color as needed */
+}
 .category-filter {
   margin-left: 20px;
   padding: 5px;

@@ -3,6 +3,7 @@
  * Main App Component
  * Imports and uses the Header component.
  */
+ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 </script>

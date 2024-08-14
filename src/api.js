@@ -1,13 +1,20 @@
-import axios from 'axios'; 
+import axios from 'axios';
+
+// Create an axios instance with the base URL and headers
+const api = axios.create({
+  baseURL: 'https://fakestoreapi.com',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 /**
-*fetch all products from the Fake Store API
-*@returns {Promise<Object[]}
-
-*/
+ * Fetch all products from the Fake Store API.
+ * @returns {Promise<Object[]>} - A promise that resolves to an array of products.
+ */
 export const fetchProducts = async () => {
   try {
-    const response = await axios.get('https://fakestoreapi.com/products');
+    const response = await api.get('/products');
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -20,25 +27,42 @@ export const fetchProducts = async () => {
  * @param {number} productId - The ID of the product to fetch.
  * @returns {Promise<Object>} - A promise that resolves to the product details.
  */
-export async function fetchProductDetails(productId) {
-    const response = await fetch(`https://fakestoreapi.com/products/${productId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch product details');
-    }
-    return await response.json();
+export const fetchProductDetails = async (productId) => {
+  try {
+    const response = await api.get(`/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    throw error;
   }
+};
 
 /**
- * Fetches categories from the API.
- * @returns {Promise<Array>} An array of categories.
+ * Fetch categories from the API.
+ * @returns {Promise<Array>} - A promise that resolves to an array of categories.
  */
-export async function fetchCategories() {
-  const response = await fetch('https://fakestoreapi.com/products/categories');
-  if (!response.ok) {
-    throw new Error('Failed to fetch categories');
+export const fetchCategories = async () => {
+  try {
+    const response = await api.get('/products/categories');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
   }
-  return response.json();
-}
+};
 
-
-  
+/**
+ * Log in a user and return a JWT token.
+ * @param {string} username - The username of the user.
+ * @param {string} password - The password of the user.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the JWT token.
+ */
+export const login = async (username, password) => {
+  // Simulate authentication for specific credentials
+  if (username === 'Veee' && password === '1234') {
+    // Simulate a successful login with a fake JWT token
+    return { token: 'fake-jwt-token' };
+  } else {
+    throw new Error('Invalid username or password');
+  }
+};

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
 import { fetchCategories } from '../api'; // Adjust the path as needed
 
 const categories = ref([]);
@@ -9,6 +10,7 @@ const isLoggedIn = ref(false);
 
 // Define emitted events
 const emit = defineEmits(['update:filterItem', 'update:searchTerm']);
+const router = useRouter();
 
 // Fetch categories on component mount
 onMounted(async () => {
@@ -21,6 +23,11 @@ onMounted(async () => {
 
 const toggleLogin = () => {
   isLoggedIn.value = !isLoggedIn.value;
+};
+
+const logout = () => {
+  localStorage.removeItem('token');
+  router.push('/login');
 };
 
 const goToCart = () => {
@@ -54,10 +61,12 @@ const emitCategoryFilter = () => {
       >
     </div>
     <div class="nav-items">
-      <button @click="addToCart" class="add-to-cart">
-      <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
-    </button>
-      <button @click="toggleLogin">{{ isLoggedIn ? 'Logout' : 'Login' }}</button>
+      <button @click="goToCart" class="add-to-cart">
+        <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
+      </button>
+      <button @click="isLoggedIn ? logout() : toggleLogin">
+        {{ isLoggedIn ? 'Logout' : 'Login' }}
+      </button>
     </div>
   </div>
 </template>

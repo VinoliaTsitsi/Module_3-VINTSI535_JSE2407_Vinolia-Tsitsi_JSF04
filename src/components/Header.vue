@@ -64,8 +64,8 @@ const emitCategoryFilter = () => {
       <button @click="goToCart" class="add-to-cart">
         <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
       </button>
-      <button @click="isLoggedIn ? logout() : toggleLogin">
-        {{ isLoggedIn ? 'Logout' : 'Login' }}
+      <button @click="isLoggedIn ? logout() : toggleLogin" class="login-avatar">
+        <i :class="isLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-user-circle'"></i> <!-- Logout or User icon -->
       </button>
     </div>
   </div>
@@ -100,22 +100,20 @@ const emitCategoryFilter = () => {
 .nav-items button {
   padding: 10px 20px;
   margin-left: 10px;
-  background-color: rgb(82, 207, 235);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-.add-to-cart {
   background: none;
+  color: rgb(82, 207, 235);;
   border: none;
   cursor: pointer;
-  padding: 0;
-  font-size: 24px; /* Adjust size as needed */
-  color: #000; /* Adjust color as needed */
+  font-size: 24px; 
 }
+
 .category-filter {
   margin-left: 20px;
   padding: 5px;
   border-color: rgb(82, 207, 235);
+}
+
+.login-avatar {
+  font-size: 24px; /* Adjust the size of the avatar */
 }
 </style>

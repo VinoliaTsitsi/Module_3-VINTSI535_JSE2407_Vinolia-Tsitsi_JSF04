@@ -34,6 +34,10 @@ const goToCart = () => {
   router.push('/cart'); // Navigate to the cart page
 };
 
+const goToWishlist = () => {
+  router.push('/wishlist'); // Navigate to the wishlist page
+};
+
 const emitSearchQuery = () => {
   emit('update:searchTerm', searchQuery.value);
 };
@@ -63,6 +67,9 @@ const emitCategoryFilter = () => {
     <div class="nav-items">
       <button @click="goToCart" class="add-to-cart">
         <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
+      </button>
+      <button @click="goToWishlist" class="wishlist">
+        <i class="fas fa-heart"></i> <!-- Heart icon for wishlist -->
       </button>
       <button @click="isLoggedIn ? logout() : toggleLogin" class="login-avatar">
         <i :class="isLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-user-circle'"></i> <!-- Logout or User icon -->
@@ -115,5 +122,9 @@ const emitCategoryFilter = () => {
 
 .login-avatar {
   font-size: 24px; /* Adjust the size of the avatar */
+}
+
+.wishlist {
+  font-size: 24px; /* Adjust the size of the heart icon */
 }
 </style>

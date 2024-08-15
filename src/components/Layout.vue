@@ -67,6 +67,11 @@ const updateFilterItem = (newFilterItem) => {
   filterItem.value = newFilterItem;
 };
 
+// Navigate to product details page
+const viewDetails = (productId) => {
+  router.push(`/product/${productId}`);
+};
+
 // Reset filters and sorting when navigating to home
 router.beforeEach((to, from) => {
   if (to.path === '/' && from.path !== '/product/:id') {
@@ -105,6 +110,7 @@ router.beforeEach((to, from) => {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .product-grid {

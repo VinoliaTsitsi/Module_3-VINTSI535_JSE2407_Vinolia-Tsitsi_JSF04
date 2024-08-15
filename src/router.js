@@ -20,6 +20,21 @@ const routes = [
     component: HomePage,
     meta: { requiresAuth: true } // Example meta field for protected routes
   },
+
+  // In your router configuration
+{
+  path: '/cart',
+  component: CartPage,
+  beforeEnter: (to, from, next) => {
+    const isAuthenticated = !!localStorage.getItem('jwt'); // Check for JWT token
+    if (isAuthenticated) {
+      next();
+    } else {
+      next('/login'); // Redirect to login if not authenticated
+    }
+  }
+}
+
   // Add other routes here
 ];
 

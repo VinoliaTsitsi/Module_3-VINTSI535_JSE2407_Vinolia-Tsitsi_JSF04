@@ -31,7 +31,7 @@ const logout = () => {
 };
 
 const goToCart = () => {
-  // Implement cart navigation
+  router.push('/cart'); // Navigate to the cart page
 };
 
 const emitSearchQuery = () => {

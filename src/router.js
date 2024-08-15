@@ -3,6 +3,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from './components/Login.vue'; // Adjust the path as needed
 import HomePage from './components/Layout.vue'; // Adjust the path as needed
+import AddCart from './components/Add-cart.vue';
 
 const routes = [
   {
@@ -23,8 +24,8 @@ const routes = [
 
   // In your router configuration
 {
-  path: '/cart',
-  component: CartPage,
+  path: '/Add-cart',
+  component: AddCart,
   beforeEnter: (to, from, next) => {
     const isAuthenticated = !!localStorage.getItem('jwt'); // Check for JWT token
     if (isAuthenticated) {

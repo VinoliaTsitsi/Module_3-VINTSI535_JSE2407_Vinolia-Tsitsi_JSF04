@@ -132,8 +132,8 @@ const emitCategoryFilter = () => {
   background-color: red;
   color: white;
   border-radius: 50%;
-  padding: 0 6px;
-  margin-left: 5px;
+  padding: 0 2px;
+  margin-left: 3px;
 }
 
 </style>

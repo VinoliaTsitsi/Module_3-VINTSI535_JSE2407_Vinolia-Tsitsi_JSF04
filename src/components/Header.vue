@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted, defineEmits, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { fetchCategories } from '../api'; // Adjust the path as needed
 
@@ -11,6 +11,9 @@ const isLoggedIn = ref(false);
 // Define emitted events
 const emit = defineEmits(['update:filterItem', 'update:searchTerm']);
 const router = useRouter();
+
+// Inject cart items
+const cartItems = inject('cartItems');
 
 // Fetch categories on component mount
 onMounted(async () => {
@@ -67,6 +70,7 @@ const emitCategoryFilter = () => {
     <div class="nav-items">
       <button @click="goToCart" class="add-to-cart">
         <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
+        <span v-if="cartItems.length" class="cart-count">{{ cartItems.length }}</span> <!-- Cart count -->
       </button>
       <button @click="goToWishlist" class="wishlist">
         <i class="fas fa-heart"></i> <!-- Heart icon for wishlist -->
@@ -101,17 +105,17 @@ const emitCategoryFilter = () => {
   padding: 10px;
   width: 400px;
   border-color: rgb(82, 207, 235);
-  border-radius: 25px ;
+  border-radius: 25px;
 }
 
 .nav-items button {
   padding: 10px 20px;
   margin-left: 10px;
   background: none;
-  color: rgb(82, 207, 235);;
+  color: rgb(82, 207, 235);
   border: none;
   cursor: pointer;
-  font-size: 24px; 
+  font-size: 24px;
 }
 
 .category-filter {
@@ -121,10 +125,15 @@ const emitCategoryFilter = () => {
 }
 
 .login-avatar {
-  font-size: 24px; /* Adjust the size of the avatar */
+  font-size: 24px; /* Adjust the size of the avatar icon */
 }
 
-.wishlist {
-  font-size: 24px; /* Adjust the size of the heart icon */
+.cart-count {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 6px;
+  margin-left: 5px;
 }
+
 </style>

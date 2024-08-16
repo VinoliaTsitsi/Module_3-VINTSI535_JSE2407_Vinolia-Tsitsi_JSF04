@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, provide } from 'vue';
 import { fetchProducts } from '../api';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import Header from './Header.vue';
+import { cartItems, addToCart } from '../cartState'; // Import the cart state and function
 
 const products = ref([]);
 const originalProducts = ref([]);
@@ -13,7 +14,6 @@ const filterItem = ref('All categories');
 const searchTerm = ref('');
 const categories = ref([]);
 const router = useRouter();
-const route = useRoute();
 
 onMounted(async () => {
   try {
@@ -27,6 +27,10 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+// Provide the cart state and addToCart function
+provide('cartItems', cartItems);
+provide('addToCart', addToCart);
 
 const filteredAndSortedProducts = computed(() => {
   let filteredProducts = [...originalProducts.value];
@@ -72,6 +76,12 @@ const viewDetails = (productId) => {
   router.push(`/product/${productId}`);
 };
 
+// Add product to cart
+const handleAddToCart = (product) => {
+  addToCart(product);
+  router.push('/cart');
+};
+
 // Reset filters and sorting when navigating to home
 router.beforeEach((to, from) => {
   if (to.path === '/' && from.path !== '/product/:id') {
@@ -98,7 +108,7 @@ router.beforeEach((to, from) => {
           <span v-for="n in (5 - Math.floor(product.rating.rate))" :key="n + 5" class="star-empty">&#9734;</span>
         </div>
         <div class="product-actions">
-          <button @click="addToCart(product)" class="action-button">
+          <button @click="handleAddToCart(product)" class="action-button">
             <i class="fas fa-shopping-cart"></i> Add to Cart
           </button>
           <button @click="viewDetails(product.id)" class="action-button">
@@ -110,6 +120,7 @@ router.beforeEach((to, from) => {
     </div>
   </div>
 </template>
+
 
 
 <style scoped>

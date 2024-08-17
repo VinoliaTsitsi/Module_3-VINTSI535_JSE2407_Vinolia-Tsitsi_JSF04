@@ -1,9 +1,13 @@
 <script setup>
+// Existing imports
 import { ref, computed, onMounted, provide } from 'vue';
 import { fetchProducts } from '../api';
 import { useRouter } from 'vue-router';
 import Header from './Header.vue';
-import { cartItems, addToCart } from '../cartState'; // Import the cart state and function
+import { cartItems, addToCart } from '../cartState';
+
+// New imports for wishlist
+import { wishlistItems, addToWishlist, removeFromWishlist } from '../wishlistState';
 
 const products = ref([]);
 const originalProducts = ref([]);
@@ -28,9 +32,12 @@ onMounted(async () => {
   }
 });
 
-// Provide the cart state and addToCart function
+// Provide cart and wishlist state and functions
 provide('cartItems', cartItems);
 provide('addToCart', addToCart);
+provide('wishlistItems', wishlistItems);
+provide('addToWishlist', addToWishlist);
+provide('removeFromWishlist', removeFromWishlist);
 
 const filteredAndSortedProducts = computed(() => {
   let filteredProducts = [...originalProducts.value];
@@ -82,6 +89,16 @@ const handleAddToCart = (product) => {
   router.push('/cart');
 };
 
+// Add product to wishlist
+const handleAddToWishlist = (product) => {
+  addToWishlist(product);
+};
+
+// Remove product from wishlist
+const handleRemoveFromWishlist = (product) => {
+  removeFromWishlist(product);
+};
+
 // Reset filters and sorting when navigating to home
 router.beforeEach((to, from) => {
   if (to.path === '/' && from.path !== '/product/:id') {
@@ -89,6 +106,7 @@ router.beforeEach((to, from) => {
   }
 });
 </script>
+
 
 <template>
   <div>
@@ -114,12 +132,16 @@ router.beforeEach((to, from) => {
           <button @click="viewDetails(product.id)" class="action-button">
             <i class="fas fa-info-circle"></i> Details
           </button>
-          <!-- Add more buttons here -->
+          <button @click="handleAddToWishlist(product)" class="wishlist-button">
+            <i class="fas fa-heart"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
 
 
 
@@ -190,6 +212,8 @@ router.beforeEach((to, from) => {
 
 .product-actions {
   margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .action-button {
@@ -199,7 +223,6 @@ router.beforeEach((to, from) => {
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 4px;
-  margin-right: 8px;
   font-size: 14px;
   display: inline-flex;
   align-items: center;
@@ -217,4 +240,26 @@ router.beforeEach((to, from) => {
 .action-button:focus {
   outline: none;
 }
+
+.wishlist-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgb(82, 207, 235);
+  font-size: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s;
+  margin-top: -200px;
+}
+
+.wishlist-button:hover {
+  color: rgb(95, 95, 174);
+}
+
+.wishlist-button:focus {
+  outline: none;
+}
 </style>
+

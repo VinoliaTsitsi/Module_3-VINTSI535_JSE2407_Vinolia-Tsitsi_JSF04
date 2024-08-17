@@ -5,6 +5,7 @@ import LoginPage from './components/Login.vue'; // Adjust the path as needed
 import HomePage from './components/Layout.vue'; // Adjust the path as needed
 import AddCart from './components/Add-cart.vue';
 import ProductDetail from './components/ProductDetail.vue'; // Import ProductDetail component
+import wishList from './components/wishList.vue'; // Import the WishList component
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage
+  },
+  {
+    path: '/wishList',
+    name: 'wishList',
+    component: wishList
   },
   {
     path: '/Layout',

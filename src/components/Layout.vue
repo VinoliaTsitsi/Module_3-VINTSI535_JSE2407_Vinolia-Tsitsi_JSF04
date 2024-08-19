@@ -86,7 +86,6 @@ const viewDetails = (productId) => {
 // Add product to cart
 const handleAddToCart = (product) => {
   addToCart(product);
-  router.push('/cart');
 };
 
 // Add product to wishlist

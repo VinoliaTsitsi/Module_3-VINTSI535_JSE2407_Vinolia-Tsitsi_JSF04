@@ -261,4 +261,3 @@ router.beforeEach((to, from) => {
   outline: none;
 }
 </style>
-

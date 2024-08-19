@@ -2,7 +2,7 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from './components/Login.vue'; // Adjust the path as needed
-import HomePage from './components/Layout.vue'; // Adjust the path as needed
+import Layout from './components/Layout.vue'; // Adjust the path as needed
 import AddCart from './components/Add-cart.vue';
 import ProductDetail from './components/ProductDetail.vue'; // Import ProductDetail component
 import wishList from './components/wishList.vue'; // Import the WishList component
@@ -25,7 +25,7 @@ const routes = [
   {
     path: '/Layout',
     name: 'Layout',
-    component: HomePage,
+    component: Layout,
     meta: { requiresAuth: true } // Example meta field for protected routes
   },
   {

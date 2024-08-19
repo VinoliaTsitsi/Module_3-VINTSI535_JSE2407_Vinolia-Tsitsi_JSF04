@@ -38,7 +38,7 @@ const goToCart = () => {
 };
 
 const goToWishlist = () => {
-  router.push('/wishlist'); // Navigate to the wishlist page
+  router.push('/wishList'); // Navigate to the wishlist page
 };
 
 const emitSearchQuery = () => {
@@ -68,7 +68,7 @@ const emitCategoryFilter = () => {
       >
     </div>
     <div class="nav-items">
-      <button @click="goToCart" class="Add-cart">
+      <button @click="goToCart" class="add-to-cart">
         <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
         <span v-if="cartItems.length" class="cart-count">{{ cartItems.length }}</span> <!-- Cart count -->
       </button>

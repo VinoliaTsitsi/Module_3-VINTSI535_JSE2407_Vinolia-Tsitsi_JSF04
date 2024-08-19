@@ -30,7 +30,6 @@ const handleLogin = async () => {
 
     // Store JWT in local storage
     localStorage.setItem('token', response.token);
-    localStorage.removeItem('guest'); // Remove guest flag if present
 
     // Redirect to the main page
     router.push('/Layout');
@@ -39,15 +38,6 @@ const handleLogin = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-const useAsGuest = () => {
-  // Set a flag indicating guest user
-  localStorage.setItem('guest', 'true');
-  localStorage.removeItem('token'); // Ensure no token is set for guest users
-
-  // Redirect to the main page
-  router.push('/Layout');
 };
 </script>
 
@@ -71,9 +61,6 @@ const useAsGuest = () => {
     </div>
     <button @click="handleLogin" :disabled="loading">
       {{ loading ? 'Logging in...' : 'Login' }}
-    </button>
-    <button @click="useAsGuest" :disabled="loading">
-      {{ loading ? 'Loading...' : 'Use as Guest' }}
     </button>
     <div v-if="error">{{ error }}</div>
   </div>

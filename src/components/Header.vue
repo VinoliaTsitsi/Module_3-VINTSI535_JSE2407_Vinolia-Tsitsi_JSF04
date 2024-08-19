@@ -34,7 +34,7 @@ const logout = () => {
 };
 
 const goToCart = () => {
-  router.push('/cart'); // Navigate to the cart page
+  router.push('/Add-cart'); // Navigate to the cart page
 };
 
 const goToWishlist = () => {
@@ -68,7 +68,7 @@ const emitCategoryFilter = () => {
       >
     </div>
     <div class="nav-items">
-      <button @click="goToCart" class="add-to-cart">
+      <button @click="goToCart" class="Add-cart">
         <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
         <span v-if="cartItems.length" class="cart-count">{{ cartItems.length }}</span> <!-- Cart count -->
       </button>

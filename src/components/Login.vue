@@ -1,87 +1,96 @@
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { login } from '../api'; // Import the simulated login function
-
-const username = ref('');
-const password = ref('');
-const passwordVisible = ref(false);
-const loading = ref(false);
-const error = ref('');
-
-const router = useRouter();
-
-const togglePasswordVisibility = () => {
-  passwordVisible.value = !passwordVisible.value;
-};
-
-const handleLogin = async () => {
-  if (!username.value || !password.value) {
-    error.value = 'Username and password are required.';
-    return;
-  }
-
-  loading.value = true;
-  error.value = '';
-
-  try {
-    // Simulate login
-    const response = await login(username.value, password.value);
-
-    // Store JWT in local storage
-    localStorage.setItem('token', response.token);
-
-    // Redirect to the main page
-    router.push('/Layout');
-  } catch (err) {
-    error.value = 'Failed to login. Please check your credentials.';
-  } finally {
-    loading.value = false;
-  }
-};
-</script>
-
 <template>
   <div class="login-container">
-    <h2>Login</h2>
-    <div>
-      <label for="username">Username:</label>
-      <input v-model="username" id="username" type="text" />
-    </div>
-    <div>
-      <label for="password">Password:</label>
-      <input
-        v-model="password"
-        :type="passwordVisible ? 'text' : 'password'"
-        id="password"
-      />
-      <button @click="togglePasswordVisibility">
-        {{ passwordVisible ? 'Hide' : 'Show' }}
+    <form @submit.prevent="handleLogin">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" v-model="username" required />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          :type="passwordFieldType"
+          id="password"
+          v-model="password"
+          required
+        />
+        <button type="button" @click="togglePasswordVisibility">
+          {{ passwordFieldType === 'password' ? 'Show' : 'Hide' }}
+        </button>
+      </div>
+
+      <button type="submit" :disabled="isSubmitting">
+        {{ isSubmitting ? 'Logging in...' : 'Login' }}
       </button>
-    </div>
-    <button @click="handleLogin" :disabled="loading">
-      {{ loading ? 'Logging in...' : 'Login' }}
-    </button>
-    <div v-if="error">{{ error }}</div>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+    </form>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      username: "",
+      password: "",
+      passwordFieldType: "password",
+      isSubmitting: false,
+      errorMessage: null,
+    };
+  },
+  methods: {
+    togglePasswordVisibility() {
+      this.passwordFieldType =
+        this.passwordFieldType === "password" ? "text" : "password";
+    },
+    async handleLogin() {
+      if (!this.username || !this.password) {
+        this.errorMessage = "Username and password are required.";
+        return;
+      }
+
+      this.isSubmitting = true;
+      this.errorMessage = null;
+
+      try {
+        const response = await fetch("https://fakestoreapi.com/auth/login", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem("jwt", data.token);
+          this.$router.push(this.$route.query.redirect || "/protected");
+        } else {
+          this.errorMessage = "Login failed. Please check your credentials.";
+        }
+      } catch (error) {
+        this.errorMessage = "An error occurred. Please try again.";
+      } finally {
+        this.isSubmitting = false;
+      }
+    },
+  },
+};
+</script>
 
 <style scoped>
 /* Add your styles here */
 .login-container {
   max-width: 400px;
-  margin: auto;
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
+  margin: 0 auto;
+  padding: 20px;
 }
-input {
-  display: block;
-  width: 100%;
-  margin: 8px 0;
+.input-group {
+  margin-bottom: 10px;
 }
-button {
-  margin-top: 8px;
+.error-message {
+  color: red;
 }
 </style>

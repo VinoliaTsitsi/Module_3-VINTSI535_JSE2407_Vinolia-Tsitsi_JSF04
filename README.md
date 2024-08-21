@@ -4,6 +4,10 @@
 - Used the fake store API and login Function. 
 - Viarity of other shopping applicationg for imspiration in terms of styling. 
 
+## Youtube video
+
+https://youtu.be/6aObeBtqhFQ
+
 # Product Catalog and Shopping Application
 
 Welcome to the Product Catalog and Shopping Application! This Vue.js-based project features a robust shopping experience, including product browsing, detailed views, cart management, and wishlist functionalities. Below is an overview of the project requirements, features, and technologies used.

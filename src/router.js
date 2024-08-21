@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from './components/Login.vue'; // Adjust the path as needed
+import Login from './components/Login.vue'; // Adjust the path as needed
 import Layout from './components/Layout.vue'; // Adjust the path as needed
 import AddCart from './components/Add-cart.vue'; // Import AddCart component
 import ProductDetail from './components/ProductDetail.vue'; // Import ProductDetail component
@@ -32,7 +32,12 @@ const routes = [
     component: wishList,
     meta: { requiresAuth: true }, // Protected route
   },
-  // Add other routes here
+ {
+  path: '/login',
+    name: 'Login',
+    component: Login,
+
+ }
 ];
 
 const router = createRouter({

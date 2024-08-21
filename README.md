@@ -10,7 +10,7 @@ Welcome to the Product Catalog and Shopping Application! This Vue.js-based proje
 
 ## Deployed URL
 
-The project is deployed and can be accessed via the custom Vercel URL: [Your Vercel URL](https://your-custom-vercel-url.vercel.app/).
+The project is deployed and can be accessed via the custom Vercel URL: [Your Vercel URL](https://vinoecomerce.netlify.app).
 
 ## Features
 

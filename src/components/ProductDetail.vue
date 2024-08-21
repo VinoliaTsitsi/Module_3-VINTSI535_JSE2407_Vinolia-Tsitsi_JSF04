@@ -68,6 +68,7 @@ const goBack = () => {
       <div class="product-info">
         <h1>{{ product.title }}</h1>
         <p>{{ product.description }}</p>
+        <p>Category:{{ product.category}}</p>
         <p>Price: R{{ product.price }}</p>
         <p>Rating: {{ product.rating.rate }} ({{ product.rating.count }} reviews)</p>
       </div>
@@ -82,7 +83,7 @@ const goBack = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: #a373b155; 
+  background-color: #6292db55; 
   padding: 16px;
 }
 

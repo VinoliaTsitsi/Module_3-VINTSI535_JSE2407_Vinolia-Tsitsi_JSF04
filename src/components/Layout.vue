@@ -5,8 +5,6 @@ import { fetchProducts } from '../api';
 import { useRouter } from 'vue-router';
 import Header from './Header.vue';
 import { cartItems, addToCart } from '../cartState';
-
-// New imports for wishlist
 import { wishlistItems, addToWishlist, removeFromWishlist } from '../wishlistState';
 
 const products = ref([]);
@@ -18,6 +16,9 @@ const filterItem = ref('All categories');
 const searchTerm = ref('');
 const categories = ref([]);
 const router = useRouter();
+
+// Comparison list state
+const comparisonList = ref([]);
 
 onMounted(async () => {
   try {
@@ -32,29 +33,27 @@ onMounted(async () => {
   }
 });
 
-// Provide cart and wishlist state and functions
+// Provide cart, wishlist, and comparison state and functions
 provide('cartItems', cartItems);
 provide('addToCart', addToCart);
 provide('wishlistItems', wishlistItems);
 provide('addToWishlist', addToWishlist);
 provide('removeFromWishlist', removeFromWishlist);
+provide('comparisonList', comparisonList);
 
 const filteredAndSortedProducts = computed(() => {
   let filteredProducts = [...originalProducts.value];
 
-  // Filter by category
   if (filterItem.value !== 'All categories') {
     filteredProducts = filteredProducts.filter(product => product.category === filterItem.value);
   }
 
-  // Filter by search term
   if (searchTerm.value) {
     filteredProducts = filteredProducts.filter(product =>
       product.title.toLowerCase().includes(searchTerm.value.toLowerCase())
     );
   }
 
-  // Sort products
   if (sorting.value === 'low') {
     filteredProducts.sort((a, b) => a.price - b.price);
   } else if (sorting.value === 'high') {
@@ -98,7 +97,20 @@ const handleRemoveFromWishlist = (product) => {
   removeFromWishlist(product);
 };
 
-// Reset filters and sorting when navigating to home
+// Add product to comparison list
+const handleAddToComparison = (product) => {
+  if (!comparisonList.value.includes(product)) {
+    comparisonList.value.push(product);
+  } else {
+    alert('Product is already in the comparison list.');
+  }
+};
+
+// Navigate to comparison page
+const goToComparison = () => {
+  router.push('/comparison');
+};
+
 router.beforeEach((to, from) => {
   if (to.path === '/' && from.path !== '/product/:id') {
     resetFiltersAndSorting();
@@ -126,17 +138,25 @@ router.beforeEach((to, from) => {
         </div>
         <div class="product-actions">
           <button @click="handleAddToCart(product)" class="action-button">
-            <i class="fas fa-shopping-cart"></i> Add to Cart
+            <i class="fas fa-shopping-cart"></i>
           </button>
           <button @click="viewDetails(product.id)" class="action-button">
-            <i class="fas fa-info-circle"></i> Details
+            <i class="fas fa-info-circle"></i>
           </button>
           <button @click="handleAddToWishlist(product)" class="wishlist-button">
             <i class="fas fa-heart"></i>
           </button>
+          <button @click="handleAddToComparison(product)" class="comparison-button">
+            <i class="fas fa-balance-scale"></i>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Button to go to comparison page -->
+    <button @click="goToComparison" class="comparison-nav-button">
+      View Comparison ({{ comparisonList.length }})
+    </button>
   </div>
 </template>
 

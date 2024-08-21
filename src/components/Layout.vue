@@ -106,13 +106,21 @@ router.beforeEach((to, from) => {
 });
 </script>
 
-
 <template>
   <div>
     <Header @update:searchTerm="updateSearchTerm" @update:filterItem="updateFilterItem" />
 
     <div v-if="loading">Loading...</div>
     <div v-if="error">{{ error }}</div>
+
+    <div class="sorting-options">
+      <label for="sort">Sort by:</label>
+      <select v-model="sorting">
+        <option value="default">Default</option>
+        <option value="low">Price: Low to High</option>
+        <option value="high">Price: High to Low</option>
+      </select>
+    </div>
 
     <div v-if="filteredAndSortedProducts.length" class="product-grid">
       <div v-for="product in filteredAndSortedProducts" :key="product.id" class="product-card">
@@ -140,11 +148,8 @@ router.beforeEach((to, from) => {
   </div>
 </template>
 
-
-
-
-
 <style scoped>
+/* Existing CSS */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -158,13 +163,13 @@ router.beforeEach((to, from) => {
   border-radius: 8px;
   background-color: white#a373b155;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: default; /* Change cursor to default */
+  cursor: default;
   display: block;
   text-align: left;
   width: 90%;
   border: none;
-  text-decoration: none; /* Remove underlining */
-  color: inherit; /* Maintain text color */
+  text-decoration: none;
+  color: inherit;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -259,5 +264,20 @@ router.beforeEach((to, from) => {
 
 .wishlist-button:focus {
   outline: none;
+}
+
+/* New CSS for sorting options */
+.sorting-options {
+  margin-bottom: 16px;
+}
+
+.sorting-options label {
+  margin-right: 8px;
+}
+
+.sorting-options select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 </style>

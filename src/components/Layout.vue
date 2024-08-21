@@ -5,8 +5,6 @@ import { fetchProducts } from '../api';
 import { useRouter } from 'vue-router';
 import Header from './Header.vue';
 import { cartItems, addToCart } from '../cartState';
-
-// New imports for wishlist
 import { wishlistItems, addToWishlist, removeFromWishlist } from '../wishlistState';
 
 const products = ref([]);
@@ -18,6 +16,9 @@ const filterItem = ref('All categories');
 const searchTerm = ref('');
 const categories = ref([]);
 const router = useRouter();
+
+// Comparison list state
+const comparisonList = ref([]);
 
 onMounted(async () => {
   try {
@@ -32,29 +33,27 @@ onMounted(async () => {
   }
 });
 
-// Provide cart and wishlist state and functions
+// Provide cart, wishlist, and comparison state and functions
 provide('cartItems', cartItems);
 provide('addToCart', addToCart);
 provide('wishlistItems', wishlistItems);
 provide('addToWishlist', addToWishlist);
 provide('removeFromWishlist', removeFromWishlist);
+provide('comparisonList', comparisonList);
 
 const filteredAndSortedProducts = computed(() => {
   let filteredProducts = [...originalProducts.value];
 
-  // Filter by category
   if (filterItem.value !== 'All categories') {
     filteredProducts = filteredProducts.filter(product => product.category === filterItem.value);
   }
 
-  // Filter by search term
   if (searchTerm.value) {
     filteredProducts = filteredProducts.filter(product =>
       product.title.toLowerCase().includes(searchTerm.value.toLowerCase())
     );
   }
 
-  // Sort products
   if (sorting.value === 'low') {
     filteredProducts.sort((a, b) => a.price - b.price);
   } else if (sorting.value === 'high') {
@@ -98,7 +97,20 @@ const handleRemoveFromWishlist = (product) => {
   removeFromWishlist(product);
 };
 
-// Reset filters and sorting when navigating to home
+// Add product to comparison list
+const handleAddToComparison = (product) => {
+  if (!comparisonList.value.includes(product)) {
+    comparisonList.value.push(product);
+  } else {
+    alert('Product is already in the comparison list.');
+  }
+};
+
+// Navigate to comparison page
+const goToComparison = () => {
+  router.push('/comparison');
+};
+
 router.beforeEach((to, from) => {
   if (to.path === '/' && from.path !== '/product/:id') {
     resetFiltersAndSorting();
@@ -106,21 +118,13 @@ router.beforeEach((to, from) => {
 });
 </script>
 
+
 <template>
   <div>
     <Header @update:searchTerm="updateSearchTerm" @update:filterItem="updateFilterItem" />
 
     <div v-if="loading">Loading...</div>
     <div v-if="error">{{ error }}</div>
-
-    <div class="sorting-options">
-      <label for="sort">Sort by:</label>
-      <select v-model="sorting">
-        <option value="default">Default</option>
-        <option value="low">Price: Low to High</option>
-        <option value="high">Price: High to Low</option>
-      </select>
-    </div>
 
     <div v-if="filteredAndSortedProducts.length" class="product-grid">
       <div v-for="product in filteredAndSortedProducts" :key="product.id" class="product-card">
@@ -134,22 +138,29 @@ router.beforeEach((to, from) => {
         </div>
         <div class="product-actions">
           <button @click="handleAddToCart(product)" class="action-button">
-            <i class="fas fa-shopping-cart"></i> Add to Cart
+            <i class="fas fa-shopping-cart"></i>
           </button>
           <button @click="viewDetails(product.id)" class="action-button">
-            <i class="fas fa-info-circle"></i> Details
+            <i class="fas fa-info-circle"></i>
           </button>
           <button @click="handleAddToWishlist(product)" class="wishlist-button">
             <i class="fas fa-heart"></i>
           </button>
+          <button @click="handleAddToComparison(product)" class="comparison-button">
+            <i class="fas fa-balance-scale"></i>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Button to go to comparison page -->
+    <button @click="goToComparison" class="comparison-nav-button">
+      View Comparison ({{ comparisonList.length }})
+    </button>
   </div>
 </template>
 
 <style scoped>
-/* Existing CSS */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -163,13 +174,13 @@ router.beforeEach((to, from) => {
   border-radius: 8px;
   background-color: white#a373b155;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: default;
+  cursor: default; /* Change cursor to default */
   display: block;
   text-align: left;
   width: 90%;
   border: none;
-  text-decoration: none;
-  color: inherit;
+  text-decoration: none; /* Remove underlining */
+  color: inherit; /* Maintain text color */
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -264,20 +275,5 @@ router.beforeEach((to, from) => {
 
 .wishlist-button:focus {
   outline: none;
-}
-
-/* New CSS for sorting options */
-.sorting-options {
-  margin-bottom: 16px;
-}
-
-.sorting-options label {
-  margin-right: 8px;
-}
-
-.sorting-options select {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
 }
 </style>

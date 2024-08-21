@@ -36,6 +36,9 @@ const logout = () => {
 const goToCart = () => {
   router.push('/Add-cart'); // Navigate to the cart page
 };
+const goToComparison = () => {
+  router.push('/comparison'); // Navigate to the comparison page
+};
 
 const goToWishlist = () => {
   router.push('/wishList'); // Navigate to the wishlist page
@@ -75,12 +78,16 @@ const emitCategoryFilter = () => {
       <button @click="goToWishlist" class="wishlist">
         <i class="fas fa-heart"></i> <!-- Heart icon for wishlist -->
       </button>
+      <button @click="goToComparison" class="comparison">
+        <i class="fas fa-exchange-alt"></i> <!-- Comparison icon -->
+      </button>
       <button @click="isLoggedIn ? logout() : toggleLogin" class="login-avatar">
         <i :class="isLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-user-circle'"></i> <!-- Logout or User icon -->
       </button>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .navbar {

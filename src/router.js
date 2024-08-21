@@ -4,6 +4,7 @@ import Layout from './components/Layout.vue'; // Adjust the path as needed
 import AddCart from './components/Add-cart.vue'; // Import AddCart component
 import ProductDetail from './components/ProductDetail.vue'; // Import ProductDetail component
 import wishList from './components/wishList.vue'; // Import the WishList component
+import Comparison from './components/Comparison.vue';
 
 const routes = [
   {
@@ -37,7 +38,12 @@ const routes = [
     name: 'Login',
     component: Login,
 
- }
+ },
+ {
+ path: '/comparison',
+ name: 'Comparison',
+ component: Comparison,
+},
 ];
 
 const router = createRouter({

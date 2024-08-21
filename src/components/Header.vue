@@ -6,10 +6,11 @@ import { fetchCategories } from '../api'; // Adjust the path as needed
 const categories = ref([]);
 const selectedCategory = ref('All categories');
 const searchQuery = ref('');
+const sorting = ref('default'); // Add sorting state
 const isLoggedIn = ref(false);
 
 // Define emitted events
-const emit = defineEmits(['update:filterItem', 'update:searchTerm']);
+const emit = defineEmits(['update:filterItem', 'update:searchTerm', 'update:sorting']);
 const router = useRouter();
 
 // Inject cart items
@@ -51,6 +52,11 @@ const emitSearchQuery = () => {
 const emitCategoryFilter = () => {
   emit('update:filterItem', selectedCategory.value);
 };
+
+// Emit sorting value
+const emitSorting = () => {
+  emit('update:sorting', sorting.value);
+};
 </script>
 
 <template>
@@ -62,6 +68,12 @@ const emitCategoryFilter = () => {
       <option value="All categories">All categories</option>
       <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
     </select>
+    <select v-model="sorting" @change="emitSorting" class="sorting-filter">
+      <option value="default">Sort by</option>
+      <option value="low">Default</option>
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+    </select>
     <div class="search-bar">
       <input 
         type="text" 
@@ -72,22 +84,21 @@ const emitCategoryFilter = () => {
     </div>
     <div class="nav-items">
       <button @click="goToCart" class="add-to-cart">
-        <i class="fas fa-shopping-bag"></i> <!-- Shopping bag icon -->
-        <span v-if="cartItems.length" class="cart-count">{{ cartItems.length }}</span> <!-- Cart count -->
+        <i class="fas fa-shopping-bag"></i>
+        <span v-if="cartItems.length" class="cart-count">{{ cartItems.length }}</span>
       </button>
       <button @click="goToWishlist" class="wishlist">
-        <i class="fas fa-heart"></i> <!-- Heart icon for wishlist -->
+        <i class="fas fa-heart"></i>
       </button>
       <button @click="goToComparison" class="comparison">
-        <i class="fas fa-exchange-alt"></i> <!-- Comparison icon -->
+        <i class="fas fa-exchange-alt"></i>
       </button>
       <button @click="isLoggedIn ? logout() : toggleLogin" class="login-avatar">
-        <i :class="isLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-user-circle'"></i> <!-- Logout or User icon -->
+        <i :class="isLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-user-circle'"></i>
       </button>
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .navbar {
@@ -131,8 +142,14 @@ const emitCategoryFilter = () => {
   border-color: rgb(82, 207, 235);
 }
 
+.sorting-filter {
+  margin-left: 20px;
+  padding: 5px;
+  border-color: rgb(82, 207, 235);
+}
+
 .login-avatar {
-  font-size: 24px; /* Adjust the size of the avatar icon */
+  font-size: 24px;
 }
 
 .cart-count {
@@ -142,5 +159,4 @@ const emitCategoryFilter = () => {
   padding: 0 2px;
   margin-left: 3px;
 }
-
 </style>

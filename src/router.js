@@ -33,17 +33,18 @@ const routes = [
     component: wishList,
     meta: { requiresAuth: true }, // Protected route
   },
+  {
+    path: '/comparison',
+    name: 'Comparison',
+    component: Comparison,
+    meta: { requiresAuth: true }, 
+   },
  {
   path: '/login',
     name: 'Login',
     component: Login,
 
  },
- {
- path: '/comparison',
- name: 'Comparison',
- component: Comparison,
-},
 ];
 
 const router = createRouter({
